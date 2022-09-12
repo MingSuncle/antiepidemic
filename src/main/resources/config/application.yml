@@ -1,0 +1,86 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8877
+
+
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy:
+        ANT_PATH_MATCHER # swagger3需要改成这个参数才能正常启动
+  # redis 配置
+#  redis:
+#    host: 120.76.231.18  # Redis服务器连接端口
+#    password: 'wuwuwuwohaocai![98765]f00373.1415926&^|andC++JavaPython'  # Redis服务器连接密码（默认为空）
+#    port: 6379
+#    timeout: 30000  # 连接超时时间（毫秒）
+#    lettuce:
+#      pool:
+#        max-active: 20  #连接池最大连接数（使用负值表示没有限制）
+#        max-wait: -1  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+#        max-idle: 10  #连接池中的最大空闲连接
+#        min-idle: 5   # 连接池中的最小空闲连接
+
+  # 数据库驱动
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.100.71.212:3306/antiepidemic?serverTimezone=GMT%2b8
+    username: root
+    password: zza19991225
+
+
+#agriculture:
+#  # APP模块，是通过jwt认证的，如果要使用APP模块，则需要修改【加密秘钥】
+#  jwt:
+#    # 加密秘钥
+#    secret: f4e3e52134348ff6b67cde581cef9eb5[www.com.mio]
+#    # token有效时长，7天，单位秒
+#    expire: 604800
+#    header: token
+
+
+# Mybatis-plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 自动将下划线命名转化为驼峰命名
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 控制台打印sql
+
+mpp:
+  entityBasePath: com.zza.antiepidemic.modules
+
+# github 捞来的 swagger，因为不喜欢原来那种 ui，所以选择用这个做 Api 文档
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    enableSwaggerModels: true
+    enableDocumentManage: true
+    swaggerModelName: 实体类列表
+    enableVersion: false
+    enableReloadCacheParameter: false
+    enableAfterScript: true
+    enableFilterMultipartApiMethodType: POST
+    enableFilterMultipartApis: false
+    enableRequestCache: true
+    enableHost: false
+    enableHostText: 192.168.0.193:8000
+    enableHomeCustom: true
+    homeCustomLocation:
+    enableSearch: false
+    enableFooter: false
+    enableFooterCustom: true
+    footerCustomContent: Apache License 2.0 | Copyright  2019-[浙江八一菜刀股份有限公司](https://gitee.com/xiaoym/knife4j)
+    enableDynamicParameter: false
+    enableDebug: true
+    enableOpenApi: false
+    enableGroup: true
+  cors: false
+  production: false
+  basic:
+    enable: false
+    username: test
+    password: 12313

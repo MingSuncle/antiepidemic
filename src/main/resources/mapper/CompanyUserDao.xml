@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zza.antiepidemic.modules.platUser.dao.CompanyUserDao">
+    <update id="activateUser">
+        update `company_user`
+        set `enabled` = 1
+        WHERE `u_id` = #{uid}
+    </update>
+
+    <update id="frozeUser">
+        update `company_user`
+        set `enabled` = 0
+        WHERE `u_id` = #{uid}
+    </update>
+
+
+</mapper>

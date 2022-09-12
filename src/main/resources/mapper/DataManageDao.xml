@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zza.antiepidemic.modules.dataManage.dao.DataManageDao">
+    <select id="currentUnfinished" resultType="com.zza.antiepidemic.modules.staffManage.entity.Staff">
+        SELECT *
+        FROM staff
+        WHERE uid NOT IN
+              (SELECT staff.uid
+               FROM staff,record
+               WHERE staff.phone = record.phone AND  TO_DAYS(upload_time) - TO_DAYS(Now()) = 0)
+    </select>
+
+
+
+
+</mapper>

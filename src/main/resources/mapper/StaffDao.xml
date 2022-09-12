@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zza.antiepidemic.modules.staffManage.dao.StaffDao">
+
+    <insert id="batchInsert" parameterType="List">
+        insert into staff (`name`,`phone`,`department`,`position`,`address`,`cid`) values
+        <foreach collection="staffs" index="index" item="item" separator=",">
+            (#{item.name},#{item.phone},#{item.department},#{item.position},#{item.address},#{item.cid})
+        </foreach>
+    </insert>
+
+    <select id="findByPhone" resultType="com.zza.antiepidemic.modules.staffManage.entity.Staff">
+        select * from `staff`
+        WHERE
+        `phone` =#{phone}
+    </select>
+
+    <select id="staffList" resultType="com.zza.antiepidemic.modules.staffManage.entity.Staff">
+        select * from `staff`
+        WHERE
+            `cid` =#{cid}
+        <if test="currentPage != null and pageSize!= null">
+            limit
+            #{currentPage},#{pageSize}
+        </if>
+    </select>
+
+    <select id="count" resultType="Integer">
+        select count(*) from `staff`
+        WHERE
+        `cid` =#{cid}
+
+    </select>
+</mapper>

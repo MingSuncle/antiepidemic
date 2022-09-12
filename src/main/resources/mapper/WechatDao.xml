@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zza.antiepidemic.modules.Wechat.dao.WechatDao">
+    <resultMap id="staffMap" type="com.zza.antiepidemic.modules.staffManage.entity.Staff">
+        <result property="uid" column="uid"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="department" column="department"/>
+        <result property="position" column="position"/>
+        <result property="position" column="address"/>
+        <result property="company" column="c_name"/>
+    </resultMap>
+    <select id="findStaffByPhone" resultMap="staffMap">
+        select s.*,c.c_name from `staff` s,`company` c
+        WHERE
+        `phone` =#{phone} AND s.cid = c.c_id
+    </select>
+
+</mapper>
