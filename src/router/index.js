@@ -26,6 +26,14 @@ const routes = [
       name: 'Home',
       component: () => import('../views/Home.vue'),
     },
+    {
+      path: '/dataManage',
+      name: 'dataManage',
+      meta:{
+        title:'数据管理'
+      },
+      component: () => import('../views/dataManage/data.vue')
+    }
     ]
   },
   {
@@ -37,10 +45,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/login',
+    path: '/antiepidemic',
     name: 'Login',
     component: () => import('../views/Login.vue')
-  }
+  },
+
 ]
 
 const router = new VueRouter({

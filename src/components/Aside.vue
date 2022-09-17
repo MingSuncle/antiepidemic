@@ -1,5 +1,5 @@
 <template>
-    <el-menu :default-openeds="['2']" style="min-height:100%;overflow-x: hidden;" background-color="rgb(48,65,86)"
+    <el-menu :default-openeds="['2']" style="width:210px;min-height:100%;overflow-x: hidden;" background-color="rgb(48,65,86)"
         text-color='#fff' active-text-color="#2990d6" :collapse-transition="true" :collapse="isCollapse" router>
         <div style="height:60px;line-height: 60px;text-align: center;">
             <img src="../assets/logoa.png" alt="" style="width:20px;position:relative;top:5px;margin-right: 5px;">
@@ -11,14 +11,14 @@
             <span slot="title">主页</span>
         </template>
         </el-menu-item>
-        <el-submenu index="2">
-            <template slot="title">
-                <i class="el-icon-menu"></i>
-                <span slot="title">系统管理</span>
-            </template>
-            <el-menu-item index="/user">用户管理</el-menu-item>
-        </el-submenu>
-
+        <el-menu-item index="/user">
+        <i class="el-icon-user-solid"></i>
+        <span slot="title">用户管理</span>
+        </el-menu-item>
+        <el-menu-item index="/dataManage">
+        <i class="el-icon-cloudy"></i>
+        <span slot="title">数据管理</span>
+      </el-menu-item>
     </el-menu>
 </template>
 

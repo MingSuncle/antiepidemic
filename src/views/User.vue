@@ -8,11 +8,13 @@
         </div>
 
         <div style="margin:10px 0">
-            <el-upload action="http://47.100.71.212:8877/Excel/import" :data="{cid:2}" :show-file-list="false" :on-success="handleImportSuccess" style="display:inline-block">
-                <el-button type="primary" @click="importStaff">导入员工 <i class="el-icon-upload2"></i></el-button>
+            <el-upload action="http://47.100.71.212:8877/Excel/import" :data="{cid:2}" :show-file-list="false"
+                :on-success="handleImportSuccess" style="display:inline-block">
+                <el-button type="primary">导入员工 <i class="el-icon-upload2"></i></el-button>
             </el-upload>
 
-            <el-button type="primary" @click="downloadExcel" class="ml-5">模板下载 <i class="el-icon-download"></i></el-button>
+            <el-button type="primary" @click="downloadExcel" class="ml-5">模板下载 <i class="el-icon-download"></i>
+            </el-button>
             <el-button type="primary" @click="handleApp">增加 <i class="el-icon-circle-plus-outline"></i></el-button>
         </div>
         <el-table :data="tableData" border>
@@ -77,6 +79,8 @@
 <script>
 import axios from 'axios';
 import { METHODS } from 'http';
+import Qs from 'qs';
+import { getSystemErrorMap } from 'util';
 
 export default {
     name: "User",
@@ -102,6 +106,15 @@ export default {
 
         search() {
 
+            this.request.get("/Staff/findByPhone", {params: {
+                phone: this.phone,
+                current_page: this.current_page,
+                pageSize: this.pageSize,
+            }}).then(res => {
+                this.tableData = res.result
+                this.total = res.total
+
+            })
         },
         handleApp() {
             this.dialogFormVisible = true
@@ -153,7 +166,7 @@ export default {
             })
 
         },
-        handleImportSuccess(){
+        handleImportSuccess() {
             this.$message.success("导入成功")
             this.load()
         },

@@ -1,7 +1,7 @@
 <template>
     <div style="font-size: 12px;line-height:60px;display:flex;">
         <div style="flex: 1; font-size: 18px">
-            <span :class="collapseBtnClass" style="cursor:pointer" @click="collapse"></span>
+            
             <el-breadcrumb separator="/" style="display:inline-block;margin-left: 10px;" >
                 <el-breadcrumb-item v-for="(item,index) in breadList" :key="index" :to="{path:getPath(item.path)}">
                     {{digestParams(item.meta.title,$route.params)}}
@@ -9,7 +9,7 @@
             </el-breadcrumb>
         </div>
         <el-dropdown style="width:70px">
-            <span style="margin-right: 5px;">小明</span><i class="el-icon-setting" style="margin-right: 5px"></i>
+            <span style="margin-right: 5px;">{{user.userName}}</span><i class="el-icon-setting" style="margin-right: 5px"></i>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item style="font-size:14px;padding: 5px 0;">个人信息</el-dropdown-item>
                 <el-dropdown-item style="font-size:14px;padding: 5px 0;">
@@ -31,6 +31,7 @@ export default{
     data:function(){
         return{
             breadList:[],
+            user : localStorage.getItem("user") ? JSON .parse(localStorage.getItem("user")) : {}
         }
     },
     mounted:function(){
