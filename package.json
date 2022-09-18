@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "element-china-area-data": "^5.0.2",
     "element-ui": "^2.15.9",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "stream-http": "^3.2.0",

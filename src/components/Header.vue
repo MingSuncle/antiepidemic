@@ -11,9 +11,8 @@
         <el-dropdown style="width:70px">
             <span style="margin-right: 5px;">{{user.userName}}</span><i class="el-icon-setting" style="margin-right: 5px"></i>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item style="font-size:14px;padding: 5px 0;">个人信息</el-dropdown-item>
                 <el-dropdown-item style="font-size:14px;padding: 5px 0;">
-                <router-link to="/login" style="text-decoration: none">退出</router-link>
+                <router-link to="/login" style="text-decoration: none ;padding:30px">退出</router-link>
                 </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>

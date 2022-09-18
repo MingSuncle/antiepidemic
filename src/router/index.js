@@ -45,10 +45,17 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/antiepidemic',
+    path: '/login',
     name: 'Login',
+    alias: '/antipidemic',
     component: () => import('../views/Login.vue')
   },
+  // {
+  //   path:'/antiepidemic',
+  //   name:'antiepidemic',
+  //   redirect:'/login'
+  // }
+
 
 ]
 

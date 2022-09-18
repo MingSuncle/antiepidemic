@@ -33,12 +33,17 @@
                         :default-time="['00:00:00', '23:59:59']" @change="changeDate" style="width:360px;">
                     </el-date-picker>
                 </el-form-item>
+                <el-form-item label="途径地">
+                    <el-cascader :options="options" v-model="selectedOptions" :props="{ multiple: true }"
+                        @change="handleChange">
+                    </el-cascader>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="el-icon-search" size="small" @click="search">
                         搜索
                     </el-button>
                     <el-button icon="el-icon-refresh" size="small" @click="resetForm()">重置</el-button>
-                    <!-- <el-button icon="el-icon-circle-plus-outline" size="small" type="primary" plain  @click="openMealHandle" >新增</el-button> -->
+
                 </el-form-item>
             </el-form>
         </div>
@@ -126,6 +131,13 @@
                     </el-tag>
                 </template>
             </el-table-column>
+            <el-table-column label="操作" header-align="center">
+                <template v-slot="scope">
+                    <el-button type="primary" style="margin-left:10%" @click="checkImg(scope.row)">
+                        查看两码一证
+                    </el-button>
+                </template>
+            </el-table-column>
         </el-table>
         <div style="padding:10px 0">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -134,28 +146,84 @@
             </el-pagination>
         </div>
 
+        <el-dialog title="查看两码一证" :visible.sync="dialogFormVisible" style="text-align:center">
+            <el-form :model="form" inline="true">
+                <template>
+                    <div id="banner">
+                        <el-carousel :interval="4000" type="card">
+                            <el-carousel-item v-for="item in srcList" :key="item">
+                                <el-image style="width: 100%; height : inherit;max-width: 100%;max-height: 100%;"
+                                    :src="item" :preview-src-list="srcList">
+                                </el-image>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                </template>
+                <el-form-item label="健康码">
+                    <el-select v-model="form.healthColor" :placeholder="form.healthColor == 'green'? '绿码'
+                    :form.healthColor == 'yellow' ? '黄码'
+                    :form.healthColor == 'red' ? '红码'
+                    :'无法识别'">
+                        <el-option v-for="item in colorsStatusOptions" :key="item.value" :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="行程码">
+                    <el-select v-model="form.travelColor" :placeholder="form.travelColor == 'green'? '绿码'
+                    :form.travelColor == 'yellow' ? '黄码'
+                    :form.travelColor == 'red' ? '红码'
+                    :'无法识别'">
+                        <el-option v-for="item in colorsStatusOptions" :key="item.value" :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="核酸检测结果">
+                    <el-select v-model="form.detectResult" :placeholder="form.detectResult == 'negative'? '阴性'
+                    :form.detectResult == 'positive' ? '阳性'
+                    :'无法识别'">
+                        <el-option v-for="item in statusOptions" :key="item.value" :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="核酸检测时间">
+                    <el-date-picker v-model="form.detectTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="七天途径地">
+                    <el-tooltip class="item" effect="dark" content="复核时请用中文逗号，分隔" placement="bottom">
+                        <el-input v-model="form.travelPlace"></el-input>
+                    </el-tooltip>
 
-
-
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="handledialogClick">复 核</el-button>
+            </div>
+        </el-dialog>
     </div>
+
 </template>
 
 <script>
-import axios from 'axios';
-import { METHODS } from 'http';
-import Qs from 'qs';
-import { getSystemErrorMap } from 'util';
+
+import { provinceAndCityData, CodeToText } from 'element-china-area-data'
+
 
 export default {
     name: "User",
     data() {
         return {
-            cid: JSON .parse(localStorage.getItem("user")).cid,
+            cid: JSON.parse(localStorage.getItem("user")).cid,
             total: 0,
             pageSize: 10,
             current_page: 1,
             tableData: [],
             phone: "",
+            dialogFormVisible: false,
             health_color: "",
             travel_color: "",
             travel_place: "",
@@ -163,6 +231,11 @@ export default {
             bgn_date: "",
             end_date: "",
             name: "",
+            travel_place: "",
+            form: [],
+            srcList: [],
+            options: provinceAndCityData,
+            selectedOptions: [],
             // 查询参数
             queryParams: {
 
@@ -205,13 +278,56 @@ export default {
         this.load()
     },
     methods: {
+        handledialogClick() {
+            console.log(this.form)
+            this.dialogFormVisible = false
+            this.$message({
+                message: '恭喜你，这是一条成功消息',
+                type: 'success'
+            })
+        },
+        checkImg(row) {
+            console.log(row)
+            this.form = row
+            this.srcList = []
+            this.dialogFormVisible = true
+            this.srcList.push(row.healthCode)
+            this.srcList.push(row.travelCode)
+            this.srcList.push(row.report)
+            console.log(this.srcList)
+        },
+        handleChange(value) {
+            // text = CodeToText(value)
+            let area_list = "";
+            for (var i = 0; i < value.length; i++) {
+                let area = ""
+                let codeArray = value[i]
+                switch (codeArray.length) {
+                    case 1:
+                        area += CodeToText[codeArray[0]];
+                        break;
+                    case 2:
+                        area += CodeToText[codeArray[0]] + CodeToText[codeArray[1]];
+                        break;
+                    case 3:
+                        area +=
+                            CodeToText[codeArray[0]] +
+                            CodeToText[codeArray[1]] +
+                            CodeToText[codeArray[2]];
+                        break;
+                    default:
+                        break;
+                }
+                area_list = area.replace("市辖区", "") + "," + area_list
+            }
+            this.travel_place = area_list.substring(0, area_list.length - 1)
+            console.log(this.travel_place)
+        },
         changeDate(e) {
             console.log("changeDate 时间选择 ->", e);
             if (e) {
                 this.bgn_date = e[0];
                 this.end_date = e[1];
-                console.log(this.bgn_date)
-                console.log(this.end_date)
             } else {
                 this.bgn_date = "";
                 this.end_date = "";
@@ -225,16 +341,17 @@ export default {
                     this.travel_multipleStatus = [],
                     this.detect_multipleStatus = [],
                     this.dateArray = []
-                    this.pagesize = 1,
+                this.pagesize = 1,
                     this.health_color = "",
                     this.travel_color = "",
                     this.travel_place = "",
                     this.detect_result = "",
                     this.bgn_date = "",
                     this.end_date = "",
+                    this.selectedOptions = [],
                     this.load()
             });
-            
+
         },
 
         search() {
@@ -298,5 +415,21 @@ export default {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+}
+
+.el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 150px;
+    margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
 }
 </style>

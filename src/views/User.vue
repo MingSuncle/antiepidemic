@@ -64,7 +64,6 @@
                 <el-form-item label="员工地址">
                     <el-input v-model="form.address" autocomplete="off"></el-input>
                 </el-form-item>
-
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -86,7 +85,7 @@ export default {
     name: "User",
     data() {
         return {
-            cid: 1,
+            cid: JSON.parse(localStorage.getItem("user")).cid,
             total: 0,
             pageSize: 10,
             current_page: 1,
@@ -106,8 +105,11 @@ export default {
 
         search() {
 
-            this.request.get("/Staff/findByPhone", {params: {
-                phone: this.phone,
+            this.request.post("/Staff/selectStaff", {params: {
+                staff:{
+                    phone:this.phone,
+                    cid:this.cid
+                },
                 current_page: this.current_page,
                 pageSize: this.pageSize,
             }}).then(res => {
@@ -153,11 +155,11 @@ export default {
                 })
         },
         load() {
-            this.request.get("/Staff/staffList", {
+            this.request.post("/Staff/selectStaff?&pageSize="+this.pageSize+"&current_page="+this.current_page ,{
                 params: {
-                    cid: this.cid,
-                    current_page: this.current_page,
-                    pageSize: this.pageSize,
+                    staff:{
+                        cid:this.cid
+                    },
                 }
             }).then(res => {
                 this.tableData = res.result

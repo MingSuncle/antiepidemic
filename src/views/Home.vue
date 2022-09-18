@@ -46,7 +46,7 @@ export default {
     name: "User",
     data() {
         return {
-            cid: 1,
+            cid: JSON.parse(localStorage.getItem("user")).cid,
             total: 0,
             pageSize: 10,
             current_page: 1,
